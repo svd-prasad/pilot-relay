@@ -6,19 +6,15 @@ import com.poc.relay.models.Pilot;
 import com.poc.relay.models.PitStop;
 import com.poc.relay.models.Schedule;
 
-import java.sql.Driver;
-import java.util.Comparator;
-import java.util.LinkedList;
 import java.util.PriorityQueue;
-import java.util.Queue;
 
 /**
  * @author svdprasad
  */
 public class ComputeWaitTime {
 
-    final int  V = 4;
-    int M = Integer.MAX_VALUE;
+    final int V = 4;
+    int INF = Integer.MAX_VALUE;
     int dist[][] = new int[V][V];
 
     //Initialize pitStop queues for Left and Right directions
@@ -27,27 +23,26 @@ public class ComputeWaitTime {
     PitStop pitStopC = new PitStop("B", "A", "C");
 
 
-    int graph[][] =  new int[][]
+    int graph[][] = new int[][]
             {
-                    { 0,  M, -2, M },
-                    { 4,  0,  3, M },
-                    { M,  M,  0, 2 },
-                    { M, -1,  M, 0 }
+                    {0, INF, -2, INF},
+                    {4, 0, 3, INF},
+                    {INF, INF, 0, 2},
+                    {INF, -1, INF, 0}
             };
 
 
-    Schedule schedule1 = new Schedule(pitStopA, pitStopC, pitStopA,111, 22, 48);
-    Schedule schedule2 = new Schedule(pitStopB, pitStopA, pitStopB,112, 16, 48);
+    Schedule schedule1 = new Schedule(pitStopA, pitStopC, pitStopA, 111, 22, 48);
+    Schedule schedule2 = new Schedule(pitStopB, pitStopA, pitStopB, 112, 16, 48);
 
-    Pilot pilot1 = new Pilot(111,222, 0,0);
-    Pilot pilot2 = new Pilot(222,111, 0,0);
-
+    Pilot pilot1 = new Pilot(111, 222, 0, 0);
+    Pilot pilot2 = new Pilot(222, 111, 0, 0);
 
 
     public void getMinimumWaitTime() {
 
         //Add only first trip segment information of all trips into schedulePriorityQueue
-        PriorityQueue<Schedule> schedulePriorityQueue=new PriorityQueue<Schedule>(100, new DepartureTimeComparator());
+        PriorityQueue<Schedule> schedulePriorityQueue = new PriorityQueue<Schedule>(100, new DepartureTimeComparator());
 
         schedulePriorityQueue.add(schedule1);
         schedulePriorityQueue.add(schedule2);
@@ -59,8 +54,8 @@ public class ComputeWaitTime {
         FloydWarshell floydWarshell = new FloydWarshell();
         floydWarshell.floydWarshell(graph, V);
 
-        for(Schedule schedule: schedulePriorityQueue) {
-            System.out.println("nav "+ schedule);
+        for (Schedule schedule : schedulePriorityQueue) {
+            System.out.println("nav " + schedule);
         }
 
     }
