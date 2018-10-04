@@ -1,5 +1,6 @@
 package com.poc.relay.processor;
 
+import com.poc.relay.helper.DepartureTimeComparator;
 import com.poc.relay.helper.FloydWarshell;
 import com.poc.relay.models.Pilot;
 import com.poc.relay.models.PitStop;
@@ -58,32 +59,11 @@ public class ComputeWaitTime {
         FloydWarshell floydWarshell = new FloydWarshell();
         floydWarshell.floydWarshell(graph, V);
 
-
         for(Schedule schedule: schedulePriorityQueue) {
-
             System.out.println("nav "+ schedule);
-
-
-        }
-
-
-    }
-
-   static class DepartureTimeComparator implements Comparator<Schedule> {
-
-        // Overriding compare() method of Comparator
-        // for descending order of StartByFromCurrentNode
-        public int compare(Schedule s1, Schedule s2) {
-            if (s1.getStartByFromCurrentNode() > s2.getStartByFromCurrentNode())
-                return 1;
-            else if (s1.getStartByFromCurrentNode() < s2.getStartByFromCurrentNode())
-                return -1;
-            return 0;
         }
 
     }
-
-
 
     public void print() {
         System.out.println(schedule1.toString());
