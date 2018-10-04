@@ -13,7 +13,7 @@ import java.util.PriorityQueue;
  */
 public class ComputeWaitTime {
 
-    final int V = 4;
+    final int V = 3;
     int INF = Integer.MAX_VALUE;
     int dist[][] = new int[V][V];
 
@@ -25,10 +25,9 @@ public class ComputeWaitTime {
 
     int graph[][] = new int[][]
             {
-                    {0, INF, -2, INF},
-                    {4, 0, 3, INF},
-                    {INF, INF, 0, 2},
-                    {INF, -1, INF, 0}
+                    {0, 1, INF},
+                    {INF, 0, 1},
+                    {INF, INF, 0}
             };
 
 
@@ -52,7 +51,7 @@ public class ComputeWaitTime {
         pitStopA.getRightPitStopQueue().add(pilot2);
 
         FloydWarshell floydWarshell = new FloydWarshell();
-        floydWarshell.floydWarshell(graph, V);
+        int shortestPath[][] = floydWarshell.floydWarshell(graph, V);
 
         for (Schedule schedule : schedulePriorityQueue) {
             System.out.println("nav " + schedule);

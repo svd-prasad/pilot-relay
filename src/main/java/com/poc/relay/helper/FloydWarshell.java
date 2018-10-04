@@ -36,7 +36,7 @@ public class FloydWarshell
     }
 
     // Function to run Floyd-Warshell algorithm
-    public void floydWarshell(int[][] adjMatrix, int N)
+    public int[][] floydWarshell(int[][] adjMatrix, int N)
     {
         // cost[] and parent[] stores shortest-path
         // (shortest-cost/shortest route) information
@@ -85,13 +85,14 @@ public class FloydWarshell
                 if (cost[v][v] < 0)
                 {
                     System.out.println("Negative Weight Cycle Found!!");
-                    return;
+                    return cost;
                 }
             }
         }
 
         // Print the shortest path between all pairs of vertices
         printSolution(cost, path, N);
+        return path;
     }
 }
 
