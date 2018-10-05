@@ -24,4 +24,6 @@ public enum PitStopToNodeMapping {
         return getPitStopToNode;
     }
 
+    public static PitStopToNodeMapping[] pitStopToNodeMappings = PitStopToNodeMapping.values();
+
 }

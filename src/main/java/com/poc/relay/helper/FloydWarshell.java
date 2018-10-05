@@ -35,6 +35,27 @@ public class FloydWarshell
         }
     }
 
+    private int printPath1(int[][] path, int v, int u) {
+
+        if (path[v][u] == v)
+            return v;
+        printPath1(path, v, path[v][u]);
+        return path[v][u];
+        //System.out.print(path[v][u] + " ");
+
+    }
+
+    public int findNextPitStopTowardEndNode( int[][] path, int N, int v, int u) {
+
+        int nextPitStop=-1;
+        if (u != v && path[v][u] != -1) {
+            //  System.out.print("Shortest Path from vertex " + v +
+            //        " to vertex " + u + " is (" + v + " ");
+            nextPitStop=printPath1(path, v, u);
+            //System.out.println(u + ")");
+        }
+        return nextPitStop;
+    }
     // Function to run Floyd-Warshell algorithm
     public int[][] floydWarshell(int[][] adjMatrix, int N)
     {
