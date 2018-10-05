@@ -8,6 +8,7 @@ import com.poc.relay.models.PitStop;
 import com.poc.relay.models.Schedule;
 
 import java.util.Arrays;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.stream.Stream;
 
@@ -23,6 +24,10 @@ public class ComputeWaitTime {
     PitStop pitStopA = new PitStop("C", "B", "A");
     PitStop pitStopB = new PitStop("A", "C", "B");
     PitStop pitStopC = new PitStop("B", "A", "C");
+
+
+    CopyOnWriteArrayList<PitStop> pitStops = new CopyOnWriteArrayList<PitStop>();
+
     int graph[][] = new int[][]
             {
                     {0, 1, INF},
@@ -61,13 +66,14 @@ public class ComputeWaitTime {
 
         //Add only first trip segment information of all trips into schedulePriorityQueue
         PriorityBlockingQueue<Schedule> schedulePriorityQueue = new PriorityBlockingQueue<Schedule>(100, new DepartureTimeComparator());
-
         schedulePriorityQueue.add(schedule1);
         schedulePriorityQueue.add(schedule2);
 
         //Initialize pilots to pitStops
         pitStopA.getLeftPitStopQueue().add(pilot1);
         pitStopA.getRightPitStopQueue().add(pilot2);
+        pitStops.addAll(Arrays.asList(pitStopA,pitStopB,pitStopC));
+
 
         FloydWarshell floydWarshell = new FloydWarshell();
         int shortestPath[][] = floydWarshell.floydWarshell(graph, V);
@@ -78,27 +84,25 @@ public class ComputeWaitTime {
 
             int curPitStopNode = PitStopToNodeMapping.valueOf(schedule.getCurrentNode().getPitStop()).getPitStopToNode();
             int endPitStopNode = PitStopToNodeMapping.valueOf(schedule.getEndNode().getPitStop()).getPitStopToNode();
-            int nextPitStop=findNextPitStopTowardEndNode(shortestPath, V, curPitStopNode, endPitStopNode);
+            int nextPitStopNodeId=findNextPitStopTowardEndNode(shortestPath, V, curPitStopNode, endPitStopNode);
 
-            System.out.println("[Nav] Next Nearest PitStop " + nextPitStop);
+            System.out.println("[Nav] Next Nearest PitStop " + nextPitStopNodeId);
 
             //get the node to PitStop mapping
-            Stream<PitStopToNodeMapping> a1 = Arrays.stream(pitStopToNodeMappings).filter(s -> s.getPitStopToNode() == 0);
-            a1.findFirst().get().name();
-
-            schedulePriorityQueue.add( new Schedule(pitStopA, pitStopC, pitStopA, 111,
-                    22, 48));
-
-
-
-
+            if(nextPitStopNodeId!=-1){
+                String nextPitStop = Arrays.stream(pitStopToNodeMappings).filter(s ->
+                        s.getPitStopToNode() == nextPitStopNodeId).findFirst().get().name();
+                for (int i = 0; i < pitStops.size(); i++) {
+                    if(pitStops.get(i).getPitStop().equalsIgnoreCase(nextPitStop)){
+                        Schedule nextSchedule=new Schedule(pitStopA, pitStopC, pitStops.get(i), 111,
+                                22, 48);
+                        schedulePriorityQueue.add(nextSchedule);
+                    }
+                }
+            }
             System.out.println("Processed nav schedule " + schedule);
         });
 
-    }
-
-    public void print() {
-        System.out.println(schedule1.toString());
     }
 
 }
