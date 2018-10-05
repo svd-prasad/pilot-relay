@@ -57,7 +57,7 @@ public class FloydWarshell
         return nextPitStop;
     }
     // Function to run Floyd-Warshell algorithm
-    public int[][] floydWarshell(int[][] adjMatrix, int N)
+    public int[][] getAllPairsShortestPath(int[][] adjMatrix, int N)
     {
         // cost[] and parent[] stores shortest-path
         // (shortest-cost/shortest route) information
@@ -112,7 +112,7 @@ public class FloydWarshell
         }
 
         // Print the shortest path between all pairs of vertices
-        printSolution(cost, path, N);
+        //printSolution(cost, path, N);
         return path;
     }
 

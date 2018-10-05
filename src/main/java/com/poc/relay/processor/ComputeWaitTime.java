@@ -4,9 +4,6 @@ import com.poc.relay.enums.PitStopToNodeMapping;
 import com.poc.relay.helper.FloydWarshell;
 import com.poc.relay.models.PitStop;
 import com.poc.relay.models.Schedule;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,12 +14,11 @@ import java.util.concurrent.PriorityBlockingQueue;
  */
 public class ComputeWaitTime {
 
-    public void getMinimumWaitTime(int graph[][], int V, PriorityBlockingQueue<Schedule> schedulePriorityQueue,
+    public void getMinimumWaitTime(int pitStopConnectivityMatrix[][], int V, PriorityBlockingQueue<Schedule> schedulePriorityQueue,
                                    ArrayList<PitStop> pitStops) {
 
-        int dist[][] = new int[V][V];
         FloydWarshell floydWarshell = new FloydWarshell();
-        int shortestPath[][] = floydWarshell.floydWarshell(graph, V);
+        final int shortestPath[][] = floydWarshell.getAllPairsShortestPath(pitStopConnectivityMatrix, V);
 
         schedulePriorityQueue.stream().forEach((Schedule schedule) -> {
             System.out.println("Processing nav schedule " + schedule);
