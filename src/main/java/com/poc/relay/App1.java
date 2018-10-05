@@ -1,44 +1,31 @@
 package com.poc.relay;
 
 import com.opencsv.CSVReader;
+import com.poc.relay.config.PitStopConfig;
+import com.poc.relay.config.ScheduleConfig;
+import com.poc.relay.processor.ComputeWaitTime;
+
 import java.io.FileReader;
 
 /**
  * @author svdprasad
  */
 public class App1 {
-    private static final String CSV_FILE_PATH
-            = "src/main/resources/config.csv";
-    public static void readDataLineByLine(String file)
-    {
-
-        try {
-
-            // Create an object of filereader class
-            // with CSV file as a parameter.
-            FileReader filereader = new FileReader(file);
-
-            // create csvReader object passing
-            // filereader as parameter
-            CSVReader csvReader = new CSVReader(filereader);
-            String[] nextRecord;
-
-            // we are going to read data line by line
-            while ((nextRecord = csvReader.readNext()) != null) {
-                for (String cell : nextRecord) {
-                    System.out.print(cell + "\t");
-                }
-                System.out.println();
-            }
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     public static void main(String[] args) {
         System.out.println( "Hello Nav!" );
-        readDataLineByLine(CSV_FILE_PATH);
+
+        PitStopConfig pitStopConfig = new PitStopConfig();
+        pitStopConfig.initPitStop();
+        System.out.println(pitStopConfig.createPitStopAdjMatrix().toString());
+
+        ScheduleConfig scheduleConfig = new ScheduleConfig();
+        scheduleConfig.initScheduleStop(pitStopConfig).stream().forEach(s-> System.out.println(s));
+
+        ComputeWaitTime computeWaitTime = new ComputeWaitTime();
+        computeWaitTime.getMinimumWaitTime(pitStopConfig.createPitStopAdjMatrix().getAdj(), pitStopConfig.getPitStops().size(),
+                scheduleConfig.initScheduleStop(pitStopConfig), pitStopConfig.getPitStops());
         System.out.println( "Nav Successfully Completed!" );
     }
+
 }
